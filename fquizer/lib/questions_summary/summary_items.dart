@@ -35,7 +35,7 @@ class SummaryItems extends StatelessWidget{
               ),
               Text(itemData['user_answer'] as String,
                   style: GoogleFonts.poppins(
-                    color: Color.fromARGB(255, 238, 127, 160),
+                    color: const Color.fromARGB(255, 238, 127, 160),
                   ),
               ),
               Text(itemData['correct_answer'] as String,
