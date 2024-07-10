@@ -1,7 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
 
-class LoginScr extends StatelessWidget {
+class LoginScr extends StatefulWidget {
   const LoginScr({super.key});
+
+  @override
+  LoginScrState createState() => LoginScrState();
+}
+
+class LoginScrState extends State<LoginScr> {
+  final TextEditingController phonenum = TextEditingController();
+  final TextEditingController password = TextEditingController();
+
+  Future login() async {
+
+    if (phonenum.text == "" || password.text == "") {
+      Fluttertoast.showToast(
+        msg: "Both fields cannot be blank!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        fontSize: 16.0,
+      );
+    } 
+    else {
+      try{
+        var url = Uri.parse('http://192.168.65.1/Asset%20Management/assets_api.php');
+        var response = await http.post(url, body: {
+          "phone_num": phonenum.text,
+          "pass": password.text,
+        });
+
+        // Logging the response body to understand what is returned
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+
+        // Checking if the response is valid JSON
+        if (response.statusCode == 200) {
+          var data = json.decode(response.body);
+
+          if (data["status"] == "error") {
+            Fluttertoast.showToast(
+              msg: "Login failed: ${data["message"]}",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              fontSize: 16.0,
+            );
+          } 
+          else {
+            Fluttertoast.showToast(
+              msg: "Login successful",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              fontSize: 16.0,
+            );
+          }
+        } 
+        else {
+          Fluttertoast.showToast(
+            msg: "Server error: ${response.statusCode}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            fontSize: 16.0,
+          );
+        }
+      } 
+      catch (e) {
+        Fluttertoast.showToast(
+          msg: "An error occurred: $e",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          fontSize: 16.0,
+        );
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +86,7 @@ class LoginScr extends StatelessWidget {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
               Color.fromARGB(255, 255, 255, 255),
               Color.fromARGB(255, 205, 205, 205),
@@ -33,11 +109,11 @@ class LoginScr extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.07),
-              myTextField("Phone Number", Colors.white),
+              myTextField("Phone Number", Colors.white, phonenum),
               SizedBox(
                 height: size.height * 0.01,
               ),
-              myTextField("Password", Colors.black12),
+              myTextField("Password", Colors.black12, password),
               SizedBox(
                 height: size.height * 0.04,
               ),
@@ -45,20 +121,25 @@ class LoginScr extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
                   children: [
-                    Container(
-                      width: size.width,
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 254, 112, 112),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Log in",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 22,
+                    GestureDetector(
+                      onTap: () {
+                        login();
+                      },
+                      child: Container(
+                        width: size.width,
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 254, 112, 112),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 22,
+                            ),
                           ),
                         ),
                       ),
@@ -73,13 +154,15 @@ class LoginScr extends StatelessWidget {
     );
   }
 
-  Container myTextField(String hint, Color color) {
+  Container myTextField(
+      String hint, Color color, TextEditingController textEditingController) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 25,
         vertical: 10,
       ),
       child: TextField(
+        controller: textEditingController,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
