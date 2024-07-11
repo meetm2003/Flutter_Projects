@@ -1,3 +1,4 @@
+import 'package:asset_management/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +14,12 @@ class LoginScr extends StatefulWidget {
 class LoginScrState extends State<LoginScr> {
   final TextEditingController phonenum = TextEditingController();
   final TextEditingController password = TextEditingController();
+
+  void setStateLogin(){
+    setState(() {
+      login();
+    });
+  }
 
   Future login() async {
 
@@ -55,6 +62,12 @@ class LoginScrState extends State<LoginScr> {
               gravity: ToastGravity.BOTTOM,
               fontSize: 16.0,
             );
+            if (mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Assets()),
+              );
+            }
           }
         } 
         else {
@@ -70,7 +83,7 @@ class LoginScrState extends State<LoginScr> {
         Fluttertoast.showToast(
           msg: "An error occurred: $e",
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           fontSize: 16.0,
         );
       }
@@ -123,7 +136,7 @@ class LoginScrState extends State<LoginScr> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        login();
+                        setStateLogin();
                       },
                       child: Container(
                         width: size.width,
