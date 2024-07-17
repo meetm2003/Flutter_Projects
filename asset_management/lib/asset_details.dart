@@ -140,9 +140,16 @@ class AssetDetails extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 10),
                                       GestureDetector(
-                                        onTap: () => FullScreenImage(
-                                          image: asset['bill_img'],
-                                        ),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => FullScreenImage(
+                                                image: asset['bill_img'],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(15),
@@ -168,9 +175,16 @@ class AssetDetails extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 10),
                                       GestureDetector(
-                                        onTap: () => FullScreenImage(
-                                          image: asset['assets_img'],
-                                        ),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => FullScreenImage(
+                                                image: asset['assets_img'],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(15),
