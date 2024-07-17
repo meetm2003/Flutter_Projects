@@ -1,16 +1,21 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:asset_management/add_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'asset_details.dart';
 
 class Assets extends StatefulWidget {
   const Assets({super.key});
 
   @override
-  Assetstate createState() => Assetstate();
+  AssetState createState() => AssetState();
 }
 
-class Assetstate extends State<Assets> {
+class AssetState extends State<Assets> {
   List<Map<String, dynamic>> assets = [];
+  bool isLoading = true;
+  String errorMessage = '';
 
   @override
   void initState() {
@@ -19,30 +24,37 @@ class Assetstate extends State<Assets> {
   }
 
   Future<void> fetchAssets() async {
-    final url = Uri.parse('http://192.168.106.1/Asset%20Management/assets_fetch_api.php');
-    final response = await http.get(url);
+    final url = Uri.parse('http://192.168.28.1/Asset%20Management/assets_fetch_api.php');
+    try {
+      final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      try {
-        print('Response body: ${response.body}'); // Debug print
-        if (response.body.isNotEmpty) {
-          final List<dynamic> jsonResponse = json.decode(response.body);
-          setState(() {
-            assets = List<Map<String, dynamic>>.from(jsonResponse);
-          });
-        } else {
-          print('Empty response body');
-        }
-      } catch (e) {
-        // Log the error if JSON parsing fails
-        print('Error parsing JSON: $e');
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = json.decode(response.body);
+        setState(() {
+          assets = jsonResponse.map<Map<String, dynamic>>((item) {
+            if (item['bill_img'] != null && item['bill_img'].isNotEmpty) {
+              item['bill_img'] = base64Decode(item['bill_img']);
+            }
+            if (item['assets_img'] != null && item['assets_img'].isNotEmpty) {
+              item['assets_img'] = base64Decode(item['assets_img']);
+            }
+            return item;
+          }).toList();
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Failed to load assets, status code: ${response.statusCode}';
+          isLoading = false;
+        });
       }
-    } else {
-      // Log if the response status is not 200
-      print('Failed to load assets, status code: ${response.statusCode}');
-    } 
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Error occurred while fetching assets: $e';
+        isLoading = false;
+      });
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -62,7 +74,7 @@ class Assetstate extends State<Assets> {
           child: Column(
             children: [
               SizedBox(
-                height: size.height * 0.1,
+                height: size.height * 0.05,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -78,19 +90,26 @@ class Assetstate extends State<Assets> {
                       ),
                     ),
                     ElevatedButton.icon(
-                      onPressed: () {}, 
-                      style:  
-                        ElevatedButton.styleFrom(
-                          foregroundColor:const Color.fromARGB(255, 254, 91, 145),
-                          backgroundColor: const Color.fromARGB(255, 254, 112, 112),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15,
-                            horizontal: 20,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
+                      onPressed: () {
+                        Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AddAsset(),
+                                  ),
+                                );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor:
+                            const Color.fromARGB(255, 254, 112, 112),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
                         ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
                       icon: const Icon(Icons.add),
                       label: const Text("Add Assets"),
                     ),
@@ -101,12 +120,14 @@ class Assetstate extends State<Assets> {
                 height: size.height * 0.04,
               ),
               Expanded(
-               child: assets.isEmpty
+                child: assets.isEmpty
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         itemCount: assets.length,
                         itemBuilder: (context, index) {
+                          final asset = assets[index];
+                          print('Rendering asset: $asset'); // Debug print
                           return Card(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
@@ -117,28 +138,39 @@ class Assetstate extends State<Assets> {
                                 vertical: 15,
                                 horizontal: 20,
                               ),
-                              // leading: assets[index][''] != null
-                              //     ? Image.network(
-                              //         assets[index]['image_url'],
-                              //         width: 50,
-                              //         height: 50,
-                              //         fit: BoxFit.cover,
-                              //       )
-                              //     : const Icon(Icons.image_not_supported),
+                              leading: asset['assets_img'] != null && asset['assets_img'] is Uint8List
+                                  ? Image.memory(
+                                      asset['assets_img'],
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const Icon(Icons.image_not_supported),
                               title: Text(
-                                assets[index]['dept_name'],
+                                asset['dept_name'] ?? '',
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               subtitle: Text(
-                                assets[index]['warranty_date'],
+                                asset['warranty_date'] ?? '',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.black54,
                                 ),
                               ),
+                              onTap: () {
+                                final assetId = asset['id'];
+                                print('Tapped asset with ID: $assetId');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AssetDetails(asset: assets[index]),
+                                  ),
+                                );
+                              },
                             ),
                           );
                         },

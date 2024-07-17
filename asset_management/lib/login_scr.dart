@@ -33,7 +33,7 @@ class LoginScrState extends State<LoginScr> {
     } 
     else {
       try{
-        var url = Uri.parse('http://192.168.106.1/Asset%20Management/assets_api.php');
+        var url = Uri.parse('http://192.168.28.1/Asset%20Management/assets_api.php');
         var response = await http.post(url, body: {
           "phone_num": phonenum.text,
           "pass": password.text,
