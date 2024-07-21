@@ -77,7 +77,7 @@ class AddAssetState extends State<AddAsset> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-          title: "Add Asset",
+        title: "Add Asset",
       ),
       body: CustomBody(
         child: SingleChildScrollView(
