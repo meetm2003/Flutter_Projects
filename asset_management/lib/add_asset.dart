@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'assets.dart';
 import 'imagetextfield.dart';
 import 'package:http/http.dart' as http;
+import 'custombody.dart';
+import 'customappbar.dart';
 
 class AddAsset extends StatefulWidget {
   const AddAsset({super.key});
@@ -22,226 +24,168 @@ class AddAssetState extends State<AddAsset> {
 
   final _formKey = GlobalKey<FormState>();
 
- Future<void> submitData() async {
-  if (!_formKey.currentState!.validate()) {
-    return;
-  }
-
-  if (billImage != null && assetImage != null) {
-    final billImageBytes = await billImage!.readAsBytes();
-    final assetImageBytes = await assetImage!.readAsBytes();
-    final billImageBase64 = base64Encode(billImageBytes);
-    final assetImageBase64 = base64Encode(assetImageBytes);
-
-    try {
-      final response = await http.post(
-        Uri.parse('http://192.168.28.1/Asset%20Management/assets_insert_api.php'),
-        body: {
-          'dept_name': deptNameController.text,
-          'warranty_date': dateController.text,
-          'bill_img': billImageBase64,
-          'assets_img': assetImageBase64,
-        },
-      );
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        if (responseData['success'] == true) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Assets(),
-            ),
-          );
-        } else {
-          print(responseData['error']);
-        }
-      } else {
-        print('Server error: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('An error occurred: $e');
+  Future<void> submitData() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
-  } else {
-    print('Both images are required');
+
+    if (billImage != null && assetImage != null) {
+      final billImageBytes = await billImage!.readAsBytes();
+      final assetImageBytes = await assetImage!.readAsBytes();
+      final billImageBase64 = base64Encode(billImageBytes);
+      final assetImageBase64 = base64Encode(assetImageBytes);
+
+      try {
+        final response = await http.post(
+          Uri.parse(
+              'http://192.168.140.1/Asset%20Management/assets_insert_api.php'),
+          body: {
+            'dept_name': deptNameController.text,
+            'warranty_date': dateController.text,
+            'bill_img': billImageBase64,
+            'assets_img': assetImageBase64,
+          },
+        );
+
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          if (responseData['success'] == true) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Assets(),
+              ),
+            );
+          } else {
+            print(responseData['error']);
+          }
+        } else {
+          print('Server error: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('An error occurred: $e');
+      }
+    } else {
+      print('Both images are required');
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 255, 255, 255),
-              Color.fromARGB(255, 205, 205, 205),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Add Asset",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 37,
-                        color: Color.fromARGB(255, 41, 41, 41),
-                      ),
+      appBar: const CustomAppBar(
+          title: "Add Asset",
+      ),
+      body: CustomBody(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Assets(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: const Color.fromARGB(255, 254, 112, 112),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 20,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      icon: const Icon(Icons.arrow_back),
-                      label: const Text("Back"),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: size.height * 0.04,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Form(
-                      key: _formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Card(
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                          TextFormField(
+                            controller: deptNameController,
+                            decoration: const InputDecoration(
+                              labelText: "Department Name",
+                              floatingLabelBehavior: FloatingLabelBehavior.auto,
+                              border: OutlineInputBorder(),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextFormField(
-                                    controller: deptNameController,
-                                    decoration: const InputDecoration(
-                                      labelText: "Department Name",
-                                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter the department name';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  const SizedBox(height: 20),
-                                  TextFormField(
-                                    controller: dateController,
-                                    decoration: const InputDecoration(
-                                      labelText: "Warranty Date",
-                                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    onTap: () async {
-                                      DateTime? picked = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime(1900),
-                                        lastDate: DateTime(2100),
-                                      );
-                                      if (picked != null) {
-                                        setState(() {
-                                          dateController.text = "${picked.day}/${picked.month}/${picked.year}";
-                                        });
-                                      }
-                                    },
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter the warranty date';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  const SizedBox(height: 20),
-                                  ImageTextField(
-                                    label: "Bill Image",
-                                    onImageSelected: (image) {
-                                      setState(() {
-                                        billImage = image;
-                                      });
-                                    },
-                                  ),
-                                  const SizedBox(height: 20),
-                                  ImageTextField(
-                                    label: "Asset Image",
-                                    onImageSelected: (image) {
-                                      setState(() {
-                                        assetImage = image;
-                                      });
-                                    },
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Center(
-                                    child: ElevatedButton.icon(
-                                      onPressed: submitData,
-                                      style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        backgroundColor: const Color.fromARGB(255, 254, 112, 112),
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 15,
-                                          horizontal: 20,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(15),
-                                        ),
-                                      ),
-                                      icon: const Icon(Icons.add),
-                                      label: const Text("Add Asset"),
-                                    ),
-                                  ),
-                                ],
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter the department name';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: dateController,
+                            decoration: const InputDecoration(
+                              labelText: "Warranty Date",
+                              floatingLabelBehavior: FloatingLabelBehavior.auto,
+                              border: OutlineInputBorder(),
+                            ),
+                            onTap: () async {
+                              DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime(2100),
+                              );
+                              if (picked != null) {
+                                setState(() {
+                                  dateController.text =
+                                      "${picked.day}/${picked.month}/${picked.year}";
+                                });
+                              }
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter the warranty date';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          ImageTextField(
+                            label: "Bill Image",
+                            onImageSelected: (image) {
+                              setState(() {
+                                billImage = image;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          ImageTextField(
+                            label: "Asset Image",
+                            onImageSelected: (image) {
+                              setState(() {
+                                assetImage = image;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: ElevatedButton.icon(
+                              onPressed: submitData,
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 254, 112, 112),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                  horizontal: 20,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
                               ),
+                              icon: const Icon(Icons.add),
+                              label: const Text("Add Asset"),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
