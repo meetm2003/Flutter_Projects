@@ -1,4 +1,3 @@
-import 'package:asset_management/assets.dart';
 import 'package:asset_management/fullscreenimage.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
