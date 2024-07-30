@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:testproject1/animatelogo.dart';
 import 'package:testproject1/custompageroute.dart';
 import 'package:testproject1/homepage.dart';
 
@@ -18,7 +19,7 @@ class stateSplashScreen extends State<SplashScreen>
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.of(context).push(
         Custompageroute(child: const HomePage()),
       );
@@ -30,28 +31,32 @@ class stateSplashScreen extends State<SplashScreen>
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 168, 213, 186),
-              Color.fromARGB(255, 179, 229, 252),
-              Color.fromARGB(255, 255, 255, 255),
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-        ),
-        child: const Column(
+        color: Colors.white,
+        // decoration: const BoxDecoration(
+        //   gradient: LinearGradient(
+        //     color: Colors.white,
+        //     begin: Alignment.topRight,
+        //     end: Alignment.bottomLeft,
+        //   ),
+        // ),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Splash Screen",
-              style: TextStyle(
-                // color: Color.fromARGB(255, 255, 243, 224),
-                color: Color.fromARGB(255, 255, 243, 224),
-                fontSize: 35,
+            AnimatedLogo(
+              child: Image.asset(
+                "assets/images/Animal_Welfare-1logo.png",
+                height: 200,
+                width: 200,
               ),
-            )
+            ),
+            // Text(
+            //   "Splash Screen",
+            //   style: TextStyle(
+            //     // color: Color.fromARGB(255, 255, 243, 224),
+            //     color: Color.fromARGB(255, 255, 243, 224),
+            //     fontSize: 35,
+            //   ),
+            // )
           ],
         ),
       ),

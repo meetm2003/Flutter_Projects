@@ -40,44 +40,63 @@ class HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/bg-2.png',
-              fit: BoxFit.cover,
+          // Positioned.fill(
+          //   child: Image.asset(
+          //     'assets/images/bg-2.png',
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
+          SizedBox(
+            height: 65,
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              currentIndex: _currentIndex,
+              elevation: 0,
+              unselectedItemColor: Colors.grey[600],
+              selectedItemColor: Colors.amber[800],
+              onTap: onTabTapped,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Image.asset(
+                    'assets/images/002-dog-house.png',
+                    width: 22,
+                    height: 22,
+                  ),
+                  activeIcon: Image.asset(
+                    'assets/images/002-dog-house.png',
+                    width: 28,
+                    height: 28,
+                  ),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Image.asset(
+                    'assets/images/003-animal-hospital.png',
+                    width: 26,
+                    height: 26,
+                  ),
+                  activeIcon: Image.asset(
+                    'assets/images/003-animal-hospital.png',
+                    width: 31,
+                    height: 31,
+                  ),
+                  label: 'Animal Hopsital',
+                ),
+                BottomNavigationBarItem(
+                  icon: Image.asset(
+                    'assets/images/004-user.png',
+                    width: 24,
+                    height: 24,
+                  ),
+                  activeIcon: Image.asset(
+                    'assets/images/004-user.png',
+                    width: 31,
+                    height: 31,
+                  ),
+                  label: 'Profile',
+                ),
+              ],
             ),
-          ),
-          BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            currentIndex: _currentIndex,
-            elevation: 0,
-            selectedItemColor: Colors.amber[800],
-            onTap: onTabTapped,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Image.asset(
-                  'assets/images/003-dog-house-1.png',
-                  width: 24,
-                  height: 24,
-                ),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Image.asset(
-                  'assets/images/004-animal-hospital.png',
-                  width: 24,
-                  height: 24,
-                ),
-                label: 'Animal Hopsital',
-              ),
-              BottomNavigationBarItem(
-                icon: Image.asset(
-                  'assets/images/005-user.png',
-                  width: 24,
-                  height: 24,
-                ),
-                label: 'Profile',
-              ),
-            ],
           ),
         ],
       ),

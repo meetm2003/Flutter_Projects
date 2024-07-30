@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         toolbarHeight: 70, // Increase AppBar height
         leading: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.fromLTRB(20, 12, 5, 12),
           child: ClipOval(
             child: Image.asset(
               'assets/images/logo.png', // Replace with your logo
@@ -26,31 +26,32 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
-        title: Container(
-          height: 50,
-          width: screenWidth * 0.7,
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Search...',
-              icon: Icon(Icons.search, color: Colors.grey),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Center(
+            child: Text(
+              "Animal Welfare",
+              style: TextStyle(
+                color: Colors.black,
+              ),
             ),
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.chat, color: Colors.black),
-            
-            onPressed: () {
-              Navigator.of(context).push(
-                Custompageroute(child: const ChatScreen()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: IconButton(
+              icon: Image.asset(
+                'assets/images/006-chat.png',
+                height: 50,
+                width: 50,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  Custompageroute(child: const ChatScreen()),
+                );
+              },
+            ),
           ),
         ],
       ),
