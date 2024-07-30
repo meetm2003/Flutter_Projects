@@ -27,7 +27,7 @@ class AssetState extends State<Assets> {
 
   Future<void> fetchAssets() async {
     final url = Uri.parse(
-        'http://192.168.140.1/Asset%20Management/assets_fetch_api.php');
+        'http://192.168.179.1/Asset%20Management/assets_fetch_api.php');
     try {
       final response = await http.get(url);
 

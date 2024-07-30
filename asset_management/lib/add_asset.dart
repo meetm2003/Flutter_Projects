@@ -38,7 +38,7 @@ class AddAssetState extends State<AddAsset> {
       try {
         final response = await http.post(
           Uri.parse(
-              'http://192.168.140.1/Asset%20Management/assets_insert_api.php'),
+              'http://192.168.179.1/Asset%20Management/assets_insert_api.php'),
           body: {
             'dept_name': deptNameController.text,
             'warranty_date': dateController.text,

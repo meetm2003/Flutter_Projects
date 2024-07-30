@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:testproject1/chatscreen.dart';
+import 'package:testproject1/Animal_hospital.dart';
 import 'package:testproject1/homescreen.dart';
 import 'package:testproject1/profilescreen.dart';
 
@@ -16,7 +15,7 @@ class HomePageState extends State<HomePage> {
 
   final List<Widget> _children = [
     const HomeScreen(),
-    const ChatScreen(),
+    const AnimalHospital(),
     const ProfileScreen(),
   ];
 
@@ -28,32 +27,59 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Colors.white, // Set to your desired color
+    return
+        // AnnotatedRegion<SystemUiOverlayStyle>(
+        //   value: SystemUiOverlayStyle.dark.copyWith(
+        //     // statusBarColor: Colors.white, // Set to your desired color
+        //   ),
+        // child:
+        Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: _children.elementAt(_currentIndex),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: _children[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          backgroundColor: Colors.white,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+      bottomNavigationBar: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bg-2.png',
+              fit: BoxFit.cover,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
+          ),
+          BottomNavigationBar(
+            backgroundColor: Colors.transparent,
+            currentIndex: _currentIndex,
+            elevation: 0,
+            selectedItemColor: Colors.amber[800],
+            onTap: onTabTapped,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Image.asset(
+                  'assets/images/003-dog-house-1.png',
+                  width: 24,
+                  height: 24,
+                ),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Image.asset(
+                  'assets/images/004-animal-hospital.png',
+                  width: 24,
+                  height: 24,
+                ),
+                label: 'Animal Hopsital',
+              ),
+              BottomNavigationBarItem(
+                icon: Image.asset(
+                  'assets/images/005-user.png',
+                  width: 24,
+                  height: 24,
+                ),
+                label: 'Profile',
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

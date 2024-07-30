@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:testproject1/chatscreen.dart';
+import 'package:testproject1/custompageroute.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,111 +10,102 @@ class HomeScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Stack(
-      children: [
-        // Background image container
-        Container(
-          height: screenHeight * 0.5, // Set height to 40% of screen height
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/background.png'),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        toolbarHeight: 70, // Increase AppBar height
+        leading: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ClipOval(
+            child: Image.asset(
+              'assets/images/logo.png', // Replace with your logo
+              width: 50,
+              height: 50,
               fit: BoxFit.cover,
             ),
           ),
         ),
-        // Overlay widgets
-        SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: screenHeight * 0.05), // Adjust to move the content below the image
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text(
-                      'Find Your',
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 25,
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.01),
-                    const Text(
-                      'Inspiration',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                    Container(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      decoration: BoxDecoration(
-                        color: const Color.fromRGBO(244, 243, 243, 1),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.black87,
-                          ),
-                          hintText: "Search you're looking for",
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.05),
-                    const Text(
-                      'Promo Today',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.015),
-                    SizedBox(
-                      height: screenHeight * 0.25, // Adjust height based on promo card size
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          promoCard('assets/images/one.jpg'),
-                          promoCard('assets/images/two.jpg'),
-                          promoCard('assets/images/three.jpg'),
-                          promoCard('assets/images/four.jpg'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                    buildPromoContainer(screenHeight, 'assets/images/three.jpg', 'Best Design'),
-                    SizedBox(height: screenHeight * 0.015),
-                    SizedBox(
-                      height: screenHeight * 0.25, // Adjust height based on promo card size
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          promoCard('assets/images/one.jpg'),
-                          promoCard('assets/images/two.jpg'),
-                          promoCard('assets/images/three.jpg'),
-                          promoCard('assets/images/four.jpg'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                    buildPromoContainer(screenHeight, 'assets/images/three.jpg', 'Best Design'),
-                  ],
-                ),
-              ),
-            ],
+        title: Container(
+          height: 50,
+          width: screenWidth * 0.7,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const TextField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Search...',
+              icon: Icon(Icons.search, color: Colors.grey),
+            ),
           ),
         ),
-      ],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.chat, color: Colors.black),
+            
+            onPressed: () {
+              Navigator.of(context).push(
+                Custompageroute(child: const ChatScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+              child: Column(
+                children: [
+                  const Text(
+                    'Promo Today',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.015),
+                  SizedBox(
+                    height: screenHeight * 0.25,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        promoCard('assets/images/one.jpg'),
+                        promoCard('assets/images/two.jpg'),
+                        promoCard('assets/images/three.jpg'),
+                        promoCard('assets/images/four.jpg'),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  buildPromoContainer(
+                      screenHeight, 'assets/images/three.jpg', 'Best Design'),
+                  SizedBox(height: screenHeight * 0.015),
+                  SizedBox(
+                    height: screenHeight * 0.25,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        promoCard('assets/images/one.jpg'),
+                        promoCard('assets/images/two.jpg'),
+                        promoCard('assets/images/three.jpg'),
+                        promoCard('assets/images/four.jpg'),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  buildPromoContainer(
+                      screenHeight, 'assets/images/three.jpg', 'Best Design'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -145,9 +138,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPromoContainer(double screenHeight, String imagePath, String text) {
+  Widget buildPromoContainer(
+      double screenHeight, String imagePath, String text) {
     return Container(
-      height: screenHeight * 0.25, // Adjust height based on your design
+      height: screenHeight * 0.25,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
