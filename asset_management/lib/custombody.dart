@@ -8,6 +8,8 @@ class CustomBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      height: double.infinity,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -18,7 +20,9 @@ class CustomBody extends StatelessWidget {
           ],
         ),
       ),
-      child: child,
+      child: SafeArea(
+        child: child,
+      ),
     );
   }
 }
