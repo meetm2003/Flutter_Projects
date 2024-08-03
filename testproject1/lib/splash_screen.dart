@@ -19,7 +19,7 @@ class stateSplashScreen extends State<SplashScreen>
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).push(
         Custompageroute(child: const HomePage()),
       );
